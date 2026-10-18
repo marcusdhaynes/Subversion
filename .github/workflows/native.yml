@@ -1,6 +1,9 @@
 name: Native builds
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["src-tauri/**", ".github/workflows/native.yml"]
 jobs:
   desktop:
     strategy:
@@ -42,6 +45,10 @@ jobs:
           targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
       - run: npm install --no-audit --no-fund
       - run: npx tauri icon app-icon.svg
+      - name: Select installed Android NDK
+        run: |
+          ndk_dir=$(find "$ANDROID_HOME/ndk" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)
+          echo "NDK_HOME=$ndk_dir" >> "$GITHUB_ENV"
       - run: npm run android:init -- --ci
       - run: npm run android:build
       - uses: actions/upload-artifact@v4
