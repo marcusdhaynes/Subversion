@@ -16,6 +16,18 @@ const isProd = process.env.NODE_ENV === 'production';
 const PORT = Number(process.env.PORT) || 3000;
 
 const app = express();
+// Allow the same app at its owner-requested GitHub Pages origin.
+app.use((req, res, next) => {
+  if (req.headers.origin === 'https://marcusdhaynes.github.io') {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  if (req.method === 'OPTIONS' && req.headers.origin === 'https://marcusdhaynes.github.io') { res.sendStatus(204); return; }
+  next();
+});
+
 app.use(express.json({ limit: '10mb' }));
 
 // Persistent state storage

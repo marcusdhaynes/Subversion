@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "build:web": "vite build && node scripts/use-cloud-runtime.mjs",
+    "build:web": "vite build",
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
     "android:init": "tauri android init",

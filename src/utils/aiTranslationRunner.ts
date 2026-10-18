@@ -1,3 +1,4 @@
+import { apiFetch } from './api';
 /**
  * AI Translation and Verification Runner
  *
@@ -32,7 +33,7 @@ interface TranslateBatchPayload {
 }
 
 async function fetchTranslateBatch(payload: TranslateBatchPayload): Promise<Map<number, string>> {
-  const res = await fetch('/api/translate-batch', {
+  const res = await apiFetch('/api/translate-batch', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

@@ -1,3 +1,4 @@
+import { apiFetch } from './api';
 /**
  * Character Name Localization and Translation Utility
  *
@@ -190,7 +191,7 @@ export function getLocalizedCharacterName(name: string, targetLanguage = 'en'): 
   }
 
   // 3. Fallback: Trigger non-blocking background fetch so future frames use it immediately
-  fetch('/api/translate-batch', {
+  apiFetch('/api/translate-batch', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

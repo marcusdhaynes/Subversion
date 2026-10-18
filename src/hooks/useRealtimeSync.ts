@@ -1,3 +1,4 @@
+import { apiFetch, API_BASE_URL } from '../utils/api';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { SubtitleProject, SubtitleLine, SubtitleGroup, Character, DefaultProjectSettings, CollaboratorUser, Series, SubtitleTrackType } from '../types/subtitle';
 import { INITIAL_PROJECT } from '../utils/initialData';
@@ -253,7 +254,7 @@ export function useRealtimeSync(): UseRealtimeSyncReturn {
     function connect() {
       if (unmounted) return;
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-      const wsUrl = `${protocol}//${window.location.host}`;
+      const wsUrl = API_BASE_URL ? API_BASE_URL.replace(/^http/, 'ws') : `${protocol}//${window.location.host}`;
 
       try {
         const ws = new WebSocket(wsUrl);
@@ -699,7 +700,7 @@ export function useRealtimeSync(): UseRealtimeSyncReturn {
         sendMessage('project:update', { project: sanitized });
         // Immediate server-side persistent save via REST
         try {
-          fetch('/api/project', {
+          apiFetch('/api/project', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(sanitized),

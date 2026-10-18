@@ -1,3 +1,4 @@
+import { apiFetch } from './utils/api';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useRealtimeSync } from './hooks/useRealtimeSync';
 import { useDarkMode } from './hooks/useDarkMode';
@@ -387,7 +388,7 @@ export default function App() {
         };
         replaceProject(updated);
         refreshAssociations(activeVideoSource?.key, newLang, currentType);
-        fetch('/api/project', {
+        apiFetch('/api/project', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updated),
@@ -470,7 +471,7 @@ export default function App() {
               content: translatedLines.map((l) => `${l.lineNumber}\n${l.startTime} --> ${l.endTime}\n${l.text}\n`).join('\n'),
               linesCount: translatedLines.length,
             }),
-            fetch('/api/project', {
+            apiFetch('/api/project', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(updatedProj),
@@ -541,7 +542,7 @@ export default function App() {
               updatedAt: Date.now(),
             };
             replaceProject(updated);
-            fetch('/api/project', {
+            apiFetch('/api/project', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(updated),
@@ -609,7 +610,7 @@ export default function App() {
             updatedAt: Date.now(),
           };
           replaceProject(updated);
-          fetch('/api/project', {
+          apiFetch('/api/project', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updated),
@@ -622,7 +623,7 @@ export default function App() {
             updatedAt: Date.now(),
           };
           replaceProject(updated);
-          fetch('/api/project', {
+          apiFetch('/api/project', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updated),
@@ -723,7 +724,7 @@ export default function App() {
       // 1. Translate primary track
       let translatedPrimaryLines: SubtitleLine[] = project.lines;
       try {
-        const res = await fetch('/api/translate', {
+        const res = await apiFetch('/api/translate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -748,7 +749,7 @@ export default function App() {
         const ccSourceLines = linkedCc?.lines || project.lines;
 
         try {
-          const ccRes = await fetch('/api/translate', {
+          const ccRes = await apiFetch('/api/translate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1408,7 +1409,7 @@ export default function App() {
 
         // 2. Fast parallel restore (Zero-wait non-blocking hydration)
         const [serverProjRes, session] = await Promise.all([
-          fetch('/api/project').then((r) => (r.ok ? r.json() : null)).catch(() => null),
+          apiFetch('/api/project').then((r) => (r.ok ? r.json() : null)).catch(() => null),
           getSubtitleSession().catch(() => null),
           syncDatabaseWithServer().catch(() => []),
         ]);

@@ -1,3 +1,4 @@
+import { apiFetch } from './api';
 import { SubtitleLine, SubtitleTrackType } from '../types/subtitle';
 import { openDB } from './fileResumeStorage';
 
@@ -267,7 +268,7 @@ export function getAllDatabaseTracks(): DatabaseSubtitleTrack[] {
  */
 export async function syncDatabaseWithServer(): Promise<DatabaseSubtitleTrack[]> {
   try {
-    const res = await fetch('/api/database/tracks');
+    const res = await apiFetch('/api/database/tracks');
     if (res.ok) {
       const serverTracks = await res.json();
       if (Array.isArray(serverTracks)) {
@@ -331,7 +332,7 @@ export async function saveSubtitleToDatabase(track: DatabaseSubtitleTrack): Prom
 
   // Also post to server API
   try {
-    await fetch('/api/database/tracks', {
+    await apiFetch('/api/database/tracks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedTrack),
@@ -365,7 +366,7 @@ export async function deleteTrackFromDatabase(trackId: string): Promise<void> {
   } catch {}
 
   try {
-    await fetch(`/api/database/tracks/${encodeURIComponent(trackId)}`, {
+    await apiFetch(`/api/database/tracks/${encodeURIComponent(trackId)}`, {
       method: 'DELETE',
     });
   } catch (err) {
@@ -403,7 +404,7 @@ export async function clearLanguageFromDatabase(
   } catch {}
 
   try {
-    await fetch('/api/database/clear-language', {
+    await apiFetch('/api/database/clear-language', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, language, trackType }),
@@ -707,7 +708,7 @@ export async function saveTitleFormatting(
 
   // Post to server title formatting registry
   try {
-    await fetch('/api/title-formatting', {
+    await apiFetch('/api/title-formatting', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title: clean, formatting: merged }),
@@ -849,7 +850,7 @@ export async function syncLineFormattingAcrossLanguages(
 
     // Synchronize to server database in background
     try {
-      fetch('/api/database/sync-line-formatting', {
+      apiFetch('/api/database/sync-line-formatting', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: clean, updatedLines }),
