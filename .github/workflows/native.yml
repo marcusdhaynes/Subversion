@@ -1,0 +1,48 @@
+name: Native builds
+on:
+  workflow_dispatch:
+jobs:
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: dtolnay/rust-toolchain@stable
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev patchelf
+      - run: npm install --no-audit --no-fund
+      - run: npx tauri icon app-icon.svg
+      - run: npm run desktop:build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Subversion-${{ runner.os }}
+          path: src-tauri/target/release/bundle/**
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - run: npm install --no-audit --no-fund
+      - run: npx tauri icon app-icon.svg
+      - run: npm run android:init
+      - run: npm run android:build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Subversion-Android
+          path: src-tauri/gen/android/app/build/outputs/apk/**/*.apk

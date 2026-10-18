@@ -1,0 +1,6 @@
+{
+  "name": "SubFlow Studio - Collaborative Subtitle Editor",
+  "description": "Ultra-fast, lightweight real-time collaborative subtitle editor for Web, Windows, Android, and iOS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

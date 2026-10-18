@@ -1,0 +1,21 @@
+{
+  "name": "SubFlow Studio - Subtitle Editor",
+  "short_name": "SubFlow",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "orientation": "any",
+  "description": "High-performance collaborative real-time subtitle editor",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "video", "multimedia"]
+}

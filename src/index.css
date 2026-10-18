@@ -1,0 +1,338 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    /* Baseline defaults (dynamically overwritten by active ThemePreset in useDarkMode) */
+    --bg-app: #f4f6fa;
+    --bg-surface: #ffffff;
+    --bg-surface-glass: rgba(255, 255, 255, 0.82);
+    --bg-subtle: #eaedf6;
+    --bg-hover: #e2e6f2;
+    --border: #d8dceb;
+    --border-light: #eaedf6;
+    --border-glass: rgba(255, 255, 255, 0.6);
+    --text-main: #171a26;
+    --text-muted: #646e86;
+    --text-faint: #9aa2b6;
+    --accent: #3a57e8;
+    --accent-hover: #2e47d4;
+    --accent-subtle: #edf1fd;
+    --accent-glow: rgba(58, 87, 232, 0.25);
+    --error-bg: rgba(239, 68, 68, 0.08);
+    --error-row: rgba(239, 68, 68, 0.15);
+    --error-border: #ef4444;
+    --error-text: #be123c;
+    --error-badge: #ef4444;
+    --toggle-track: #d9dde8;
+    --toggle-knob: #ffffff;
+    --toggle-icon: #4b5368;
+  }
+
+  html.dark {
+    --bg-app: #121420;
+    --bg-surface: #181b2a;
+    --bg-surface-glass: rgba(24, 27, 42, 0.78);
+    --bg-subtle: #20253a;
+    --bg-hover: #292f49;
+    --border: #2a314b;
+    --border-light: #21263c;
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --text-main: #f1f4fb;
+    --text-muted: #8e98b0;
+    --text-faint: #57607a;
+    --accent: #3b82f6;
+    --accent-hover: #60a5fa;
+    --accent-subtle: rgba(59, 130, 246, 0.16);
+    --accent-glow: rgba(59, 130, 246, 0.35);
+    --error-bg: rgba(239, 68, 68, 0.12);
+    --error-row: rgba(239, 68, 68, 0.18);
+    --error-border: #ef4444;
+    --error-text: #fca5a5;
+    --error-badge: #ef4444;
+    --toggle-track: #2a314b;
+    --toggle-knob: #ffffff;
+    --toggle-icon: #1e2336;
+  }
+
+  body {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    touch-action: manipulation;
+    transition: none;
+  }
+}
+
+/* Completely prevent desynchronized transitions during theme switching */
+.no-transitions,
+.no-transitions *,
+.no-transitions *::before,
+.no-transitions *::after {
+  transition: none !important;
+}
+
+/* Glass crystal clear surface utility */
+.crystal-glass {
+  background-color: var(--bg-surface-glass);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--border-glass, var(--border));
+}
+
+.crystal-glass-subtle {
+  background-color: var(--bg-surface-glass);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Dense ultra-tight table styling */
+.dense-grid-row {
+  height: 28px !important;
+  max-height: 28px !important;
+}
+
+.dense-grid-row td {
+  height: 28px !important;
+  max-height: 28px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  border-top: 1.5px solid transparent;
+  border-bottom: 1.5px solid var(--border);
+  box-sizing: border-box;
+}
+
+/* Drag and Drop placement indicator: subtle white dashed line between rows */
+.dense-grid-row.drop-placement-before > td {
+  border-top: 1.5px dashed rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 -1px 3px rgba(255, 255, 255, 0.18);
+}
+
+.dense-grid-row.drop-placement-after > td {
+  border-bottom: 1.5px dashed rgba(255, 255, 255, 0.85) !important;
+  box-shadow: 0 1px 3px rgba(255, 255, 255, 0.18);
+}
+
+html:not(.dark) .dense-grid-row.drop-placement-before > td {
+  border-top: 1.5px dashed rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.28);
+}
+
+html:not(.dark) .dense-grid-row.drop-placement-after > td {
+  border-bottom: 1.5px dashed rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+}
+
+/* 100% Opaque Sticky Columns for Subtitle Table - Never see through from behind or sides */
+.sticky-cell-bg-normal {
+  background-color: var(--bg-surface) !important;
+}
+.dense-grid-row:hover .sticky-cell-bg-normal,
+.group:hover .sticky-cell-bg-normal {
+  background-color: var(--bg-hover) !important;
+}
+.sticky-cell-bg-playing {
+  background-color: #edf1fd !important;
+}
+html.dark .sticky-cell-bg-playing {
+  background-color: #1e2640 !important;
+}
+.sticky-cell-bg-selected {
+  background-color: #e8eefa !important;
+}
+html.dark .sticky-cell-bg-selected {
+  background-color: #1c243a !important;
+}
+.sticky-cell-bg-flagged {
+  background-color: #fef2f2 !important;
+}
+html.dark .sticky-cell-bg-flagged {
+  background-color: #291a1e !important;
+}
+
+/* =========================================================================
+   PROGRESSIVE DARKENING: FOLDERS, SUBFOLDERS & LINES IN FOLDERS
+   Subtle, harmonious depth that naturally adapts to any active theme preset
+   ========================================================================= */
+
+/* Light Mode Depth Palette (Gentle, very subtle steps) */
+:root {
+  --folder-accent: color-mix(in srgb, var(--accent) 75%, var(--text-main) 25%);
+  --folder-accent-subtle: color-mix(in srgb, var(--accent) 9%, transparent);
+  --folder-accent-border: color-mix(in srgb, var(--accent) 28%, transparent);
+  --tree-rail: color-mix(in srgb, var(--accent) 80%, var(--text-muted) 20%);
+  --tree-rail-subtle: color-mix(in srgb, var(--accent) 42%, transparent);
+  --tree-rail-sub: color-mix(in srgb, var(--accent) 85%, #000000 15%);
+
+  --line-bg-depth-0: var(--bg-surface);
+  --folder-bg-depth-0: color-mix(in srgb, var(--bg-surface) 96%, var(--bg-subtle) 4%);
+
+  --line-bg-depth-1: color-mix(in srgb, var(--bg-surface) 97%, var(--border) 3%);
+  --folder-bg-depth-1: color-mix(in srgb, var(--bg-surface) 94%, var(--border) 6%);
+
+  --line-bg-depth-2: color-mix(in srgb, var(--bg-surface) 91%, var(--border) 9%);
+  --folder-bg-depth-2: color-mix(in srgb, var(--bg-surface) 88%, var(--border) 12%);
+
+  --line-bg-depth-3: color-mix(in srgb, var(--bg-surface) 85%, var(--border) 15%);
+  --folder-bg-depth-3: color-mix(in srgb, var(--bg-surface) 82%, var(--border) 18%);
+}
+
+/* Dark Mode Depth Palette (Gentle, subtle darkening into theme canvas - no harsh black cuts) */
+html.dark {
+  --folder-accent: color-mix(in srgb, var(--accent) 80%, #ffffff 20%);
+  --folder-accent-subtle: color-mix(in srgb, var(--accent) 14%, transparent);
+  --folder-accent-border: color-mix(in srgb, var(--accent) 35%, transparent);
+  --tree-rail: color-mix(in srgb, var(--accent) 85%, #ffffff 15%);
+  --tree-rail-subtle: color-mix(in srgb, var(--accent) 46%, transparent);
+  --tree-rail-sub: color-mix(in srgb, var(--accent) 92%, #ffffff 8%);
+
+  --line-bg-depth-0: var(--bg-surface);
+  --folder-bg-depth-0: color-mix(in srgb, var(--bg-surface) 93%, var(--bg-subtle) 7%);
+
+  --line-bg-depth-1: color-mix(in srgb, var(--bg-surface) 92%, var(--bg-app) 8%);
+  --folder-bg-depth-1: color-mix(in srgb, var(--bg-surface) 84%, var(--bg-app) 16%);
+
+  --line-bg-depth-2: color-mix(in srgb, var(--bg-surface) 78%, var(--bg-app) 22%);
+  --folder-bg-depth-2: color-mix(in srgb, var(--bg-surface) 72%, var(--bg-app) 28%);
+
+  --line-bg-depth-3: color-mix(in srgb, var(--bg-surface) 66%, var(--bg-app) 34%);
+  --folder-bg-depth-3: color-mix(in srgb, var(--bg-surface) 60%, var(--bg-app) 40%);
+}
+
+/* Group / Folder Rows */
+.folder-depth-0:not(.row-selected):not(.row-playing) {
+  background-color: var(--folder-bg-depth-0) !important;
+}
+.folder-depth-0:not(.row-selected):not(.row-playing) > td.sticky-cell-bg-normal {
+  background-color: var(--folder-bg-depth-0) !important;
+}
+
+.folder-depth-1:not(.row-selected):not(.row-playing) {
+  background-color: var(--folder-bg-depth-1) !important;
+}
+.folder-depth-1:not(.row-selected):not(.row-playing) > td.sticky-cell-bg-normal {
+  background-color: var(--folder-bg-depth-1) !important;
+}
+
+.folder-depth-2:not(.row-selected):not(.row-playing) {
+  background-color: var(--folder-bg-depth-2) !important;
+}
+.folder-depth-2:not(.row-selected):not(.row-playing) > td.sticky-cell-bg-normal {
+  background-color: var(--folder-bg-depth-2) !important;
+}
+
+.folder-depth-3:not(.row-selected):not(.row-playing) {
+  background-color: var(--folder-bg-depth-3) !important;
+}
+.folder-depth-3:not(.row-selected):not(.row-playing) > td.sticky-cell-bg-normal {
+  background-color: var(--folder-bg-depth-3) !important;
+}
+
+/* Line Rows inside Folders */
+.line-depth-0:not(.row-selected):not(.row-playing) {
+  background-color: var(--line-bg-depth-0);
+}
+.line-depth-0:not(.row-selected):not(.row-playing) > td.sticky-cell-bg-normal {
+  background-color: var(--line-bg-depth-0) !important;
+}
+
+.line-depth-1:not(.row-selected):not(.row-playing) {
+  background-color: var(--line-bg-depth-1) !important;
+}
+.line-depth-1:not(.row-selected):not(.row-playing) > td.sticky-cell-bg-normal {
+  background-color: var(--line-bg-depth-1) !important;
+}
+
+.line-depth-2:not(.row-selected):not(.row-playing) {
+  background-color: var(--line-bg-depth-2) !important;
+}
+.line-depth-2:not(.row-selected):not(.row-playing) > td.sticky-cell-bg-normal {
+  background-color: var(--line-bg-depth-2) !important;
+}
+
+.line-depth-3:not(.row-selected):not(.row-playing) {
+  background-color: var(--line-bg-depth-3) !important;
+}
+.line-depth-3:not(.row-selected):not(.row-playing) > td.sticky-cell-bg-normal {
+  background-color: var(--line-bg-depth-3) !important;
+}
+
+/* Smooth, consistent hover for all rows */
+.dense-grid-row:hover,
+.dense-grid-row:hover > td.sticky-cell-bg-normal {
+  background-color: var(--bg-hover) !important;
+}
+
+/* Minimalist scrollbars */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 146, 168, 0.28);
+  border-radius: 9999px;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(160, 168, 195, 0.22);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 146, 168, 0.48);
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(160, 168, 195, 0.42);
+}
+
+/* Touch friendly tap states */
+button, input, select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Drag to scroll support */
+.cursor-grabbing,
+.cursor-grabbing * {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+
+/* Enable touch panning across all scroll containers */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Flagged row subtle ambient pulse */
+@keyframes flagGlow {
+  0%, 100% {
+    box-shadow: inset 0 0 8px var(--error-bg);
+  }
+  50% {
+    box-shadow: inset 0 0 16px var(--error-row);
+  }
+}
+
+.flagged-theme-highlight {
+  animation: flagGlow 3s ease-in-out infinite;
+}
+
+/* High-performance subtitle table row rendering (skips offscreen layout and paint for instant loading of thousands of lines) */
+.dense-grid-row {
+  content-visibility: auto;
+  contain-intrinsic-size: 28px;
+}
