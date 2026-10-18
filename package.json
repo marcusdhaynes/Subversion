@@ -10,13 +10,14 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "build:web": "vite build",
+    "build:web": "vite build && node scripts/use-cloud-runtime.mjs",
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
     "android:init": "tauri android init",
     "android:build": "tauri android build --apk",
     "ios:init": "tauri ios init",
-    "ios:build": "tauri ios build"
+    "ios:build": "tauri ios build",
+    "build:standalone": "vite build"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
