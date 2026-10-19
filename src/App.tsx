@@ -4,14 +4,7 @@ import { useRealtimeSync } from './hooks/useRealtimeSync';
 import { useDarkMode } from './hooks/useDarkMode';
 import { Header } from './components/Header';
 import { SubtitleTable } from './components/SubtitleTable';
-import { MobileSubtitleCardView } from './components/MobileSubtitleCardView';
 import { VideoPlayerPreview } from './components/VideoPlayerPreview';
-import { SettingsModal } from './components/SettingsModal';
-import { FlagEditorModal } from './components/FlagEditorModal';
-import { UserLoginModal } from './components/UserLoginModal';
-import { ImportExportModal } from './components/ImportExportModal';
-import { AutoTranslateModal } from './components/AutoTranslateModal';
-import { MediaDatabaseModal } from './components/MediaDatabaseModal';
 import {
   saveSubtitleToDatabase,
   findTrackInDatabase,
@@ -61,6 +54,22 @@ import {
 } from './utils/fileResumeStorage';
 import { SAMPLE_VIDEOS } from './components/VideoPlayerPreview';
 import { FileText, AlertCircle, Upload, Check, X, Sparkles, Languages } from 'lucide-react';
+
+const SettingsModal = React.lazy(() => import('./components/SettingsModal').then((module) => ({ default: module.SettingsModal })));
+const FlagEditorModal = React.lazy(() => import('./components/FlagEditorModal').then((module) => ({ default: module.FlagEditorModal })));
+const UserLoginModal = React.lazy(() => import('./components/UserLoginModal').then((module) => ({ default: module.UserLoginModal })));
+const ImportExportModal = React.lazy(() => import('./components/ImportExportModal').then((module) => ({ default: module.ImportExportModal })));
+const AutoTranslateModal = React.lazy(() => import('./components/AutoTranslateModal').then((module) => ({ default: module.AutoTranslateModal })));
+const MediaDatabaseModal = React.lazy(() => import('./components/MediaDatabaseModal').then((module) => ({ default: module.MediaDatabaseModal })));
+const MobileSubtitleCardView = React.lazy(() => import('./components/MobileSubtitleCardView').then((module) => ({ default: module.MobileSubtitleCardView })));
+
+// Download modal code only when it is first needed. Once opened, keep it mounted
+// so closing/reopening preserves the existing modal's internal state and behavior.
+function MountAfterFirstOpen({ open, children }: { open: boolean; children: React.ReactNode }) {
+  const [hasOpened, setHasOpened] = useState(open);
+  useEffect(() => { if (open) setHasOpened(true); }, [open]);
+  return open || hasOpened ? <>{children}</> : null;
+}
 
 export default function App() {
   const {
@@ -1103,6 +1112,8 @@ export default function App() {
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState('');
+  const deferredSearchQuery = React.useDeferredValue(searchQuery);
+  const characterSearchNames = useMemo(() => new Map(project.characters.map((char) => [char.id, char.name.toLowerCase()])), [project.characters]);
   const [flagFilterOnly, setFlagFilterOnly] = useState(false);
   const [selectedCharFilter, setSelectedCharFilter] = useState('all');
 
@@ -1141,8 +1152,8 @@ export default function App() {
         }
       }
 
-      if (searchQuery.trim()) {
-        const query = searchQuery.toLowerCase();
+      if (deferredSearchQuery.trim()) {
+        const query = deferredSearchQuery.toLowerCase();
         const lineNumStr = String(line.lineNumber).padStart(6, '0');
         const textMatch = line.text.toLowerCase().includes(query);
         const timeMatch = line.startTime.includes(query) || line.endTime.includes(query);
@@ -1150,8 +1161,7 @@ export default function App() {
         const noteMatch = line.flag?.note?.toLowerCase().includes(query) || false;
         const codeMatch = line.flag?.code?.toLowerCase().includes(query) || false;
 
-        const char = project.characters.find((c) => c.id === line.characterId);
-        const charMatch = char ? char.name.toLowerCase().includes(query) : false;
+        const charMatch = characterSearchNames.get(line.characterId || '')?.includes(query) || false;
 
         if (!textMatch && !timeMatch && !lineNumMatch && !noteMatch && !codeMatch && !charMatch) {
           return false;
@@ -1160,7 +1170,7 @@ export default function App() {
 
       return true;
     });
-  }, [project.lines, flagFilterOnly, selectedCharFilter, searchQuery, project.characters]);
+  }, [project.lines, flagFilterOnly, selectedCharFilter, deferredSearchQuery, characterSearchNames]);
 
   // Bulk apply character typography to existing lines
   const handleApplyCharacterStyleToLines = useCallback(
@@ -1697,6 +1707,8 @@ export default function App() {
       )}
 
       {/* Unified Settings Modal (Series, Characters, Typography Defaults, Language) */}
+      <React.Suspense fallback={null}>
+      <MountAfterFirstOpen open={isSettingsOpen}>
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
@@ -1731,7 +1743,9 @@ export default function App() {
         }}
         onApplyStyleToLines={handleApplyCharacterStyleToLines}
       />
+      </MountAfterFirstOpen>
 
+      <MountAfterFirstOpen open={!!flagModalLine}>
       <FlagEditorModal
         isOpen={!!flagModalLine}
         line={flagModalLine}
@@ -1739,7 +1753,9 @@ export default function App() {
         onSave={handleSaveFlag}
         currentUserName={currentUser.name}
       />
+      </MountAfterFirstOpen>
 
+      <MountAfterFirstOpen open={isUserLoginOpen}>
       <UserLoginModal
         isOpen={isUserLoginOpen}
         onClose={() => setIsUserLoginOpen(false)}
@@ -1747,7 +1763,9 @@ export default function App() {
         onUpdateUser={setCurrentUser}
         collaborators={collaborators}
       />
+      </MountAfterFirstOpen>
 
+      <MountAfterFirstOpen open={isImportExportOpen}>
       <ImportExportModal
         isOpen={isImportExportOpen}
         onClose={() => setIsImportExportOpen(false)}
@@ -1757,6 +1775,7 @@ export default function App() {
         onAddCharacters={handleAddCharacters}
         defaultTab={importExportTab}
       />
+      </MountAfterFirstOpen>
 
       {/* Auto-Translate Modal */}
       {isAutoTranslateOpen && pendingTranslateData && (
@@ -1812,11 +1831,14 @@ export default function App() {
       )}
 
       {/* Media Database Hierarchy Modal */}
+      <MountAfterFirstOpen open={isMediaDatabaseOpen}>
       <MediaDatabaseModal
         isOpen={isMediaDatabaseOpen}
         onClose={() => setIsMediaDatabaseOpen(false)}
         onSelectTrack={handleSelectDatabaseTrack}
       />
+      </MountAfterFirstOpen>
+      </React.Suspense>
     </div>
   );
 }
