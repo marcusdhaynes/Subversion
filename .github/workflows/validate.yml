@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: '24'
           cache: npm
-      - run: npm ci --no-audit --no-fund
+      - run: npm install --no-audit --no-fund
       - name: Build optimized GitHub Pages app
         run: npm run build:web
         env:
