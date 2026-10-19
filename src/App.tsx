@@ -4,6 +4,7 @@ import { useRealtimeSync } from './hooks/useRealtimeSync';
 import { useDarkMode } from './hooks/useDarkMode';
 import { Header } from './components/Header';
 import { SubtitleTable } from './components/SubtitleTable';
+import { MobileSubtitleCardView } from './components/MobileSubtitleCardView';
 import { VideoPlayerPreview } from './components/VideoPlayerPreview';
 import {
   saveSubtitleToDatabase,
@@ -61,7 +62,6 @@ const UserLoginModal = React.lazy(() => import('./components/UserLoginModal').th
 const ImportExportModal = React.lazy(() => import('./components/ImportExportModal').then((module) => ({ default: module.ImportExportModal })));
 const AutoTranslateModal = React.lazy(() => import('./components/AutoTranslateModal').then((module) => ({ default: module.AutoTranslateModal })));
 const MediaDatabaseModal = React.lazy(() => import('./components/MediaDatabaseModal').then((module) => ({ default: module.MediaDatabaseModal })));
-const MobileSubtitleCardView = React.lazy(() => import('./components/MobileSubtitleCardView').then((module) => ({ default: module.MobileSubtitleCardView })));
 
 // Download modal code only when it is first needed. Once opened, keep it mounted
 // so closing/reopening preserves the existing modal's internal state and behavior.
