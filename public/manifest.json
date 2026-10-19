@@ -1,9 +1,9 @@
 {
-  "name": "SubFlow Studio - Subtitle Editor",
-  "short_name": "SubFlow",
-  "id": "/",
-  "start_url": "/",
-  "scope": "/",
+  "name": "Subversion - Subtitle Editor",
+  "short_name": "Subversion",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#09090b",
@@ -11,11 +11,15 @@
   "description": "High-performance collaborative real-time subtitle editor",
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "192x192 512x512",
+      "src": "./favicon.svg",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["productivity", "video", "multimedia"]
+  "categories": [
+    "productivity",
+    "video",
+    "multimedia"
+  ]
 }
