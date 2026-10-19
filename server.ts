@@ -1217,5 +1217,5 @@ if (!isProd) {
 }
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`SubFlow Studio server running on port ${PORT} [Mode: ${isProd ? 'production' : 'development'}]`);
+  console.log(`Subversion server running on port ${PORT} [Mode: ${isProd ? 'production' : 'development'}]`);
 });

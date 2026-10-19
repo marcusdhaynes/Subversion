@@ -183,8 +183,9 @@ export function useRealtimeSync(): UseRealtimeSyncReturn {
   const saveToLocalStorage = useCallback((p: SubtitleProject) => {
     pendingSaveRef.current = p;
     try {
-      localStorage.setItem(LAST_PROJECT_KEY, JSON.stringify(p));
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(p));
+      const serialized = JSON.stringify(p);
+      localStorage.setItem(LAST_PROJECT_KEY, serialized);
+      localStorage.setItem(LOCAL_STORAGE_KEY, serialized);
     } catch {
       // quota or private browsing
     }
@@ -195,8 +196,9 @@ export function useRealtimeSync(): UseRealtimeSyncReturn {
     const handleFlush = () => {
       if (pendingSaveRef.current) {
         try {
-          localStorage.setItem(LAST_PROJECT_KEY, JSON.stringify(pendingSaveRef.current));
-          localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(pendingSaveRef.current));
+          const serialized = JSON.stringify(pendingSaveRef.current);
+          localStorage.setItem(LAST_PROJECT_KEY, serialized);
+          localStorage.setItem(LOCAL_STORAGE_KEY, serialized);
         } catch {
           // fallback
         }

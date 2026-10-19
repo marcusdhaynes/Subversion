@@ -1,0 +1,39 @@
+name: Validate Subversion Web
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm install --no-audit --no-fund
+      - name: Build optimized GitHub Pages app
+        run: npm run build:web
+        env:
+          GITHUB_PAGES: 'true'
+      - name: Validate deployment paths and app identity
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          const html = fs.readFileSync('dist/index.html', 'utf8');
+          const manifest = JSON.parse(fs.readFileSync('dist/manifest.json', 'utf8'));
+          assert.match(html, /<title>Subversion - Collaborative Subtitle Editor<\/title>/);
+          assert.match(html, /href="\/Subversion\/manifest.json"/);
+          assert.match(html, /href="\/Subversion\/favicon.svg"/);
+          assert.match(html, /\/Subversion\/assets\/[^"]+\.js/);
+          assert.equal(manifest.short_name, 'Subversion');
+          assert.equal(manifest.start_url, './');
+          assert.equal(manifest.scope, './');
+          assert.equal(manifest.icons[0].src, './favicon.svg');
+          assert.ok(fs.readdirSync('dist/assets').some(name => name.endsWith('.js')));
+          JS

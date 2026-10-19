@@ -1,9 +1,10 @@
 {
-  "name": "react-example",
+  "name": "subversion",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "tauri": "tauri",
     "dev": "tsx server.ts",
     "build": "vite build",
     "start": "node --import tsx server.ts",
