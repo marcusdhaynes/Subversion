@@ -28,5 +28,14 @@
   "current_stage": "database_reserved_not_live",
   "source_data_migrated": false,
   "docs": "AGENTS.md",
-  "canonical_map": "marcusdhaynes/somniel-holdings/database-routing.json"
+  "canonical_map": "marcusdhaynes/somniel-holdings/database-routing.json",
+  "domain_storage_guidance": {
+    "store": [
+      "Authorized media catalogs, playback resume markers and user subtitle presets when remote sync is requested"
+    ],
+    "avoid": [
+      "Raw movie/video streams and ephemeral playback state written per frame"
+    ],
+    "cutover": "Maintain existing local media database and realtime app behavior until new backend is verified."
+  }
 }
