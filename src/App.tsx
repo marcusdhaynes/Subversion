@@ -2,6 +2,7 @@ import { apiFetch } from './utils/api';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useRealtimeSync } from './hooks/useRealtimeSync';
 import { useDarkMode } from './hooks/useDarkMode';
+import { UpdateBanner } from './updates/UpdateBanner';
 import { Header } from './components/Header';
 import { SubtitleTable } from './components/SubtitleTable';
 import { MobileSubtitleCardView } from './components/MobileSubtitleCardView';
@@ -1522,6 +1523,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[var(--bg-app)] text-[var(--text-main)] font-sans antialiased">
+      <UpdateBanner />
       {/* 1. Unified Sleek Top Bar (Row 1) */}
       <Header
         project={project}

@@ -10,6 +10,7 @@ import {
   LanguageListDisplayMode,
 } from '../types/subtitle';
 import { InlineColorWheel } from './ColorWheelPicker';
+import { UpdatesSection } from '../updates/UpdatesSection';
 import {
   X,
   Tv,
@@ -1448,6 +1449,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </form>
           )}
         </div>
+        <div className="px-4 pb-4 shrink-0 overflow-y-auto"><UpdatesSection /></div>
       </div>
     </div>
   );
